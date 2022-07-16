@@ -1,0 +1,59 @@
+﻿
+@model IEnumerable<Coupon>
+
+<div class="whiteBackground border">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info">Coupons  </h2>
+
+        </div>
+        <div class="text-right col-6">
+            <partial name="_CreateButtonPartial" />
+        </div>
+
+    </div>
+    @if (Model.Count() == 0)
+    {
+        <p class="text-danger">No Coupons .....</p>
+    }
+    else
+    {
+        <table class="table table-striped border">
+            <tr class="table-secondary">
+                <th>@Html.DisplayNameFor(e => e.Name)</th>
+                <th>@Html.DisplayNameFor(e => e.Discount)</th>
+                <th>@Html.DisplayNameFor(e => e.MinimumAmount)</th>
+                <th>@Html.DisplayNameFor(e=>e.Picture)</th>
+             
+                <th>@Html.DisplayNameFor(e => e.IsActive)</th>
+               
+
+                
+                <th></th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+        <tr>
+            <td>@Html.DisplayFor(e => item.Name)</td>
+            <td>@Html.DisplayFor(e => item.Discount)</td>
+            <td>@Html.DisplayFor(e => item.MinimumAmount)</td>
+            <td><img src="@("data:image/png;base64," + Convert.ToBase64String(item.Picture))" style="width:50%;height:50px;border:1px solid #ddd;border-radius:10%" /></td>
+            <td>@Html.DisplayFor(e => item.IsActive)</td>
+            <td style="width:150px">
+                <partial name="_OperationButtonsPartial" model="@item.Id" />
+
+            </td>
+        </tr>
+            }
+
+        </table>
+
+    }
+
+</div>
+
+
+
+
+

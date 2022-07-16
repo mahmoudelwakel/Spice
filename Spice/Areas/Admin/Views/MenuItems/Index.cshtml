@@ -1,0 +1,52 @@
+﻿
+@model IEnumerable<MenuItem>
+<h1>index</h1>
+<div class="whiteBackground border">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info">Menu Items  </h2>
+
+        </div>
+        <div class="text-right col-6">
+            <partial name="_CreateButtonPartial" />
+        </div>
+
+    </div>
+    @if (Model.Count() == 0)
+    {
+        <p class="text-danger">No Menu Items .....</p>
+    }
+    else
+    {
+        <table class="table table-striped border">
+            <tr class="table-secondary">
+                <th>@Html.DisplayNameFor(e => e.Name)</th>
+                <th>@Html.DisplayNameFor(e => e.Description)</th>
+                <th>@Html.DisplayNameFor(e => e.CateogryId)</th>
+                <th>@Html.DisplayNameFor(e => e.SubCategoryId)</th>
+                <th></th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+        <tr>
+            <td>@Html.DisplayFor(e => item.Name)</td>
+            <td>@Html.DisplayFor(e => item.Description)</td>
+            <td>@Html.DisplayFor(e => item.Category.Name)</td>
+            <td>@Html.DisplayFor(e => item.SubCategory.Name)</td>
+            <td><img src="@item.Image"style="width:50px;height:50px" /></td>
+            <td style="width:150px">
+                <partial name="_OperationButtonsPartial" model="@item.Id" />
+
+            </td>
+        </tr>
+            }
+
+        </table>
+
+    }
+
+</div>
+
+
+

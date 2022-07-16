@@ -1,0 +1,112 @@
+﻿@using Spice.Models.Utility
+@model OrderDetailViewModel
+<form method="post"asp-action="OrderPickUp"asp-controller="Orders"asp-area="Customer"asp-route-orderId="@Model.OrderHeader.Id">
+    <div class="container row border ml-1" style="width:100%;padding:5px;border-radius:10px">
+        <br />
+        <input type="hidden" asp-for="OrderHeader.Id" />
+        <div class="col-12 col-lg-8" style="border-right:1px solid #bbb9b9">
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="OrderHeader.PickUpName"></label>
+                </div>
+                <div class="col-9">
+                    <input type="text"readonly class="form-control" asp-for="OrderHeader.PickUpName" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="OrderHeader.ApplicationUser.Email"></label>
+                </div>
+                <div class="col-9">
+                    <input type="text"readonly class="form-control" asp-for="OrderHeader.ApplicationUser.Email" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="OrderHeader.PhoneNumber"></label>
+                </div>
+                <div class="col-9">
+                    <input type="text"readonly class="form-control" asp-for="OrderHeader.PhoneNumber" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="OrderHeader.OrderTotal"></label>
+                </div>
+                <div class="col-9">
+                    <input type="text"readonly class="form-control" asp-for="OrderHeader.OrderTotal" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="OrderHeader.PickUpTime"></label>
+                </div>
+                <div class="col-9">
+                    <input type="text"readonly class="form-control" value="@Model.OrderHeader.PickUpTime.ToShortDateString() @Model.OrderHeader.PickUpTime.ToShortTimeString()" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="OrderHeader.Comments"></label>
+                </div>
+                <div class="col-9">
+                    <input type="text"readonly class="form-control" asp-for="OrderHeader.Comments" />
+                </div>
+            </div>
+
+        </div>
+        <div class="col-12 col-lg-4">
+            <h4 class="d-flex justify-content-between align-content-center mb-4">
+                <span class="text-muted">Order ID:</span>
+                <span class="badge badge-secondary badge-pill">
+                    @Model.OrderHeader.Id
+                </span>
+
+            </h4>
+            <ul class="list-group mb-3">
+                @foreach (var item in Model.OrderDetails)
+               {
+                   <li class="list-group-item d-flex justify-content-between">
+                       <div>
+                          <h6 class="my-0">@item.Name</h6>
+                          <small class="text-muted">Quantity:@item.Count</small>
+                       </div>
+                       <span class="text-muted">
+                        @(item.Price*item.Count)
+                       </span>
+                   </li>
+               }
+                @if(Model.OrderHeader.CouponCode != null)
+                {
+                     <li class="list-group-item d-flex justify-content-between">
+                       <div class="text-success">
+                          <h6 class="my-0">Promo Code</h6>
+                          <small class="text-muted">@Model.OrderHeader.CouponCode</small>
+                       </div>
+                       <span class="text-muted">
+                        @(Model.OrderHeader.OrderTotalOrginal-Model.OrderHeader.OrderTotal)
+                       </span>
+                   </li>
+                }
+                  <li class="list-group-item d-flex justify-content-between bg-light">
+                      <span class="text-info">Total (USD)</span>
+                      <strong class="text-info">
+                          @(Math.Round(Model.OrderHeader.OrderTotal,2))
+                      </strong>
+                   </li>
+
+            </ul>
+            @if(Model.OrderHeader.Status==SD.StatusReady && (User.IsInRole(SD.ManagerUser) || User.IsInRole(SD.FrontDeskUser))){
+                <button type="submit" class="btn btn-success form-control">
+                    <i class="fas fa-thumbs-up"></i>&nbsp;Confirm PickUp
+                </button>
+            }
+            else{
+            <button type="submit"class="btn btn-info form-control">@Model.OrderHeader.Status</button>
+            }
+
+        </div>
+
+    </div>
+
+</form>

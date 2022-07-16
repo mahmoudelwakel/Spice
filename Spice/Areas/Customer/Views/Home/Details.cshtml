@@ -1,0 +1,108 @@
+﻿@model ShoppingCart
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h2 class="text-info">Details</h2>
+<br />
+
+<form asp-action="Details" method="post">
+    <div class="whiteBackground border row">
+        <div class="col-md-8">
+        <div asp-validation-summary="ModelOnly" class="text-danger"> </div>
+        <input type="hidden"asp-for="MenuItemId" />
+         <div class="col-12 pd-4 d-md-none ">
+            <img src="@Model.MenuItem.Image"style="width:100%;border:1px solid #ddd;border-radius:10px" />
+        </div>
+        
+        <div class="form-group row">
+            <div class="col-md-4 ">
+                <label asp-for="MenuItem.Name" class="text-info font-weight-bold"></label>
+            </div>
+            <div class="col-md-8">
+                <input readonly asp-for="MenuItem.Name" class="form-control" />
+              
+            </div>
+        </div>
+         <div class="form-group row">
+            <div class="col-md-4 ">
+                <label asp-for="MenuItem.Description" class="text-info font-weight-bold"></label>
+            </div>
+            <div class="col-md-8">
+                <textarea readonly asp-for="MenuItem.Description" class="form-control" ></textarea>
+                
+            </div>
+        </div>
+         <div class="form-group row">
+            <div class="col-md-4 ">
+                <label asp-for="MenuItem.Price" class="text-info font-weight-bold"></label>
+            </div>
+            <div class="col-md-8">
+                <input readonly asp-for="MenuItem.Price" class="form-control" />
+               
+            </div>
+        </div>
+      
+         <div class="form-group row">
+            <div class="col-md-4 ">
+                <label asp-for="MenuItem.CateogryId" class="text-info font-weight-bold"></label>
+            </div>
+            <div class="col-md-8">
+               <input readonly asp-for="MenuItem.Category.Name"class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label  asp-for="MenuItem.SubCategoryId" class="text-info font-weight-bold"></label>
+            </div>
+            <div class="col-md-8">
+              <input readonly asp-for="MenuItem.SubCategory.Name"class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4 ">
+                <label asp-for="MenuItem.Spicyness" class="text-info font-weight-bold"></label>
+            </div>
+            <div class="col-md-8">
+               <select disabled id="ddlSubCategories" asp-for="MenuItem.Spicyness"asp-items="@Html.GetEnumSelectList<MenuItem.Espicy>()" class="form-control"></select>
+                <span class="text-danger" asp-validation-for="MenuItem.Spicyness"></span>
+            </div>
+        </div>
+         <div class="form-group row">
+            <div class="col-md-4 ">
+                <label asp-for="Count" class="text-info font-weight-bold"></label>
+            </div>
+            <div class="col-md-8">
+               <input  asp-for="Count"class="form-control" />
+                <span class="text-danger" asp-validation-for="Count"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+               
+            </div>
+              <div class="col-md-4">
+                  <a asp-action="Index"class="btn btn-success form-control">Back To List</a>
+               
+            </div>
+              <div class="col-md-4">
+               <input type="submit"class="btn btn-primary form-control"value="Add To Shopping Cart" />
+            </div>
+
+        </div>
+        </div>
+        <div class="col-3 d-none d-md-block offset-1">
+            <img src="@Model.MenuItem.Image"style="width:100%;border:1px solid #ddd;border-radius:10px" />
+        </div>
+    </div>
+</form>
+@section Scripts{ 
+<partial name="_ValidationScriptsPartial" />
+
+}
+
+
+
+
+

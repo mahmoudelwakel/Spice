@@ -1,0 +1,159 @@
+﻿@model OrderListViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h1>index</h1>
+<div class="whiteBackground border">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info">Order History</h2>
+
+        </div>
+        <div class="text-right col-6">
+           
+        </div>
+
+    </div>
+    @if (Model.Orders.Count() == 0)
+    {
+        <p class="text-danger">No History.....</p>
+    }
+    else
+    {
+        <table class="table table-striped border">
+            <tr class="table-secondary">
+                <th>@Html.DisplayNameFor(e=>e.Orders[0].OrderHeader.Id)</th>
+                <th>@Html.DisplayNameFor(e=>e.Orders[0].OrderHeader.PickUpName)</th>
+                <th>@Html.DisplayNameFor(e=>e.Orders[0].OrderHeader.ApplicationUser.Email)</th>
+                <th>@Html.DisplayNameFor(e=>e.Orders[0].OrderHeader.PickUpTime)</th>
+                <th>@Html.DisplayNameFor(e=>e.Orders[0].OrderHeader.OrderTotal)</th>
+                <th>Total Item</th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model.Orders)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(e=>item.OrderHeader.Id)</td>
+                    <td>@Html.DisplayFor(e=>item.OrderHeader.PickUpName)</td>
+                    <td>@Html.DisplayFor(e=>item.OrderHeader.ApplicationUser.Email)</td>
+                    <td>@Html.DisplayFor(e=>item.OrderHeader.PickUpTime)</td>
+                    <td>@Html.DisplayFor(e=>item.OrderHeader.OrderTotal)</td>
+                    <td>@Html.DisplayFor(e=>item.OrderDetails.Count)</td>
+
+                    <td >
+                        <button class="btn btn-success showDetails" type="button" data-id="@item.OrderHeader.Id" data-toggle="modal">
+                            <i class="fas fa-list-alt"></i>&nbsp; Details
+                        </button>
+                        @if (item.OrderHeader.Status == SD.StatusSubmitted || item.OrderHeader.Status == SD.StatusComleted
+                       || item.OrderHeader.Status == SD.StatusInProccess || item.OrderHeader.Status == SD.StatusReady)
+                        {
+                            <button class="btn btn-info showStatus" type="button" data-id="@item.OrderHeader.Id" data-toggle="modal">
+                                <i class="fas fa-clock"></i>&nbsp; Status
+                            </button>
+                        }
+
+                    </td>
+                </tr>
+            }
+
+        </table>
+        <div page-model="@Model.pagingInfo" page-classes-enabled="true" page-class="btn  border" page-class-normal="btn btn-light" page-class-selected="btn btn-info active" class="btn btn-group float-right">
+        </div>
+
+        <br />
+
+    }
+
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog-centered modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-light justify-content-center">
+                <h5 class="modal-title">Order Details</h5>
+            </div>
+            <div class="modal-body justify-content-center" id="myModalContent">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" style="width:20%">Close</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="modal fade" id="myOrderStatus" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog-centered modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-light justify-content-center">
+                <h5 class="modal-title">Order Status</h5>
+            </div>
+            <div class="modal-body justify-content-center" id="myOrderStatusContent">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" style="width:20%">Close</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+@section Scripts{
+    <script>
+var URL = "/Customer/Orders/GetOrderDetails";
+var urlOrderStatus = "/Customer/Orders/GetOrderStatus";
+        $(function() {
+            $(".showDetails").click(function() {
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+                $.ajax(
+                    {
+                        type: "GET",
+                        url: URL,
+                        contentType: "text/html;charset=utf-8",
+                        data: { "id": id },
+                        cache: false,
+                        dataType: "html",
+                        success: function(data) {
+                            $('#myModalContent').html(data);
+                            $('#myModal').modal('show');
+                        },
+                        error: function() {
+                            alert("Dynamic Data Load Failed")
+                        }
+
+                    }
+                );
+            });
+
+             $(".showStatus").click(function() {
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+                $.ajax(
+                    {
+                        type: "GET",
+                        url: urlOrderStatus,
+                        contentType: "text/html;charset=utf-8",
+                        data: { "id": id },
+                        cache: false,
+                        dataType: "html",
+                        success: function(data) {
+                            $('#myOrderStatusContent').html(data);
+                            $('#myOrderStatus').modal('show');
+                        },
+                        error: function() {
+                            alert("Dynamic Data Load Failed")
+                        }
+
+                    }
+                );
+            });
+
+
+
+        });
+    </script>
+}

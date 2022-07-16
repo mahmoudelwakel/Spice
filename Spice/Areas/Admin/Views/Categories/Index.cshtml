@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Category>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h1>index</h1>
+<div class="whiteBackground border">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info">Category</h2>
+
+        </div>
+        <div class="text-right col-6">
+<partial name="_CreateButtonPartial" />
+        </div>
+
+    </div>
+    @if (Model.Count() == 0) { 
+        <p class="text-danger">No Category.....</p>
+    }
+            else
+            {
+        <table class="table table-striped border" >
+            <tr class="table-secondary">
+                <th>@Html.DisplayNameFor(e=>e.Name)</th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+              <tr>
+                 <td>@Html.DisplayFor(e=>item.Name)</td>
+                  <td style="width:150px">
+                     <partial name="_OperationButtonsPartial"model="@item.Id" />
+
+                  </td>
+                 </tr>
+            }
+
+        </table>
+
+            }
+
+</div>

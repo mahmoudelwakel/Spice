@@ -1,0 +1,153 @@
+﻿@model OrderListViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<form method="get">
+    <br />
+    <br />
+    <h2 class="text-info">Order Ready For PickUp</h2>
+    <br />
+    <div class="whiteBackground border">
+        <div class="container border border-secondary mb-3"style="height:60px">
+            <div class="row container ">
+                <div class="col-11">
+                    <div class="row"style="padding-top:10px;">
+                        <div class="col-4">
+                            @Html.Editor("searchName",new{htmlAttributes=new{@class="form-control",@placeholder="Name...."
+                            }})
+
+                        </div>
+                         <div class="col-4">
+                            @Html.Editor("searchPhone",new{htmlAttributes=new{@class="form-control",@placeholder="Phone...."
+                            }})
+
+                        </div>
+                         <div class="col-4">
+                            @Html.Editor("searchEmail",new{htmlAttributes=new{@class="form-control",@placeholder="Email...."
+                            }})
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-1">
+                    <div class=" row"style="padding-top:10px">
+                        <button type="submit"class="btn btn-primary form-control"value="Search">
+                            <i class="fas fa-search"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div>
+
+            @if (Model.Orders.Count() == 0)
+            {
+                <p class="text-danger">No Order Ready For PickUp.....</p>
+            }
+            else
+            {
+                <table class="table table-striped border">
+                    <tr class="table-secondary">
+                        <th>@Html.DisplayNameFor(e=>e.Orders[0].OrderHeader.Id)</th>
+                        <th>@Html.DisplayNameFor(e=>e.Orders[0].OrderHeader.PickUpName)</th>
+                        <th>@Html.DisplayNameFor(e=>e.Orders[0].OrderHeader.ApplicationUser.Email)</th>
+                        <th>@Html.DisplayNameFor(e=>e.Orders[0].OrderHeader.PickUpTime)</th>
+                        <th>@Html.DisplayNameFor(e=>e.Orders[0].OrderHeader.OrderTotal)</th>
+                        <th>Total Item</th>
+                        <th></th>
+                    </tr>
+                    @foreach (var item in Model.Orders)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(e=>item.OrderHeader.Id)</td>
+                            <td>@Html.DisplayFor(e=>item.OrderHeader.PickUpName)</td>
+                            <td>@Html.DisplayFor(e=>item.OrderHeader.ApplicationUser.Email)</td>
+                            <td>@Html.DisplayFor(e=>item.OrderHeader.PickUpTime)</td>
+                            <td>@Html.DisplayFor(e=>item.OrderHeader.OrderTotal)</td>
+                            <td>@Html.DisplayFor(e=>item.OrderDetails.Count)</td>
+
+                            <td>
+                                <button class="btn btn-success showDetails" type="button" data-id="@item.OrderHeader.Id" data-toggle="modal">
+                                    <i class="fas fa-list-alt"></i>&nbsp; Details
+                                </button>
+
+
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+                <div page-model="@Model.pagingInfo" page-classes-enabled="true" page-class="btn  border" page-class-normal="btn btn-light" page-class-selected="btn btn-info active" class="btn btn-group float-right">
+                </div>
+
+                <br />
+
+            }
+        </div>
+
+    </div>
+</form>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true"style="width:100%">
+    <div class="modal-dialog-centered modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-light">
+                <div class="col-10 offset-1">
+                  <center><h5 class="modal-title">Order Details</h5></center>   
+                </div>
+               <div class="col-1">
+                    <button class="btn btn-outline-secondary float-right close"aria-label="Close" data-dismiss="modal" >&times;</button>
+               </div>
+            </div>
+            <div class="modal-body justify-content-center" id="myModalContent">
+            </div>
+          
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        var URL = "/Customer/Orders/GetOrderDetails";
+        $(function() {
+            $(".showDetails").click(function() {
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+                $.ajax(
+                    {
+                        type: "GET",
+                        url: URL,
+                        contentType: "text/html;charset=utf-8",
+                        data: { "id": id },
+                        cache: false,
+                        dataType: "html",
+                        success: function(data) {
+                            $('#myModalContent').html(data);
+                            $('#myModal').modal('show');
+                        },
+                        error: function() {
+                            alert("Dynamic Data Load Failed")
+                        }
+
+                    }
+                );
+            });
+
+
+
+
+
+        });
+    </script>
+}
